@@ -1,3 +1,7 @@
+import warnings
+warnings.simplefilter(action='ignore', category=UserWarning)
+# warnings.simplefilter(action='ignore', category=PyplotGlobalUseWarning)
+
 import streamlit as st
 # To make things easier later, we're also importing numpy and pandas for
 # working with sample data.
@@ -185,8 +189,7 @@ features = {'trbv10-1*01','trbv10-2','trbv10-2*01','trbv11-2*01','trbv11-2*03','
 class_names = data['disease_stage'].unique().tolist()
 shap_values = shap.TreeExplainer(rf).shap_values(data[features])
 fig, axes = plt.subplots()
-shap.summary_plot(shap_values, data[features], class_names=class_names, max_display=10)
-st.pyplot(fig)
+st.pyplot(shap.summary_plot(shap_values, data[features], class_names=class_names, max_display=10))
 
 ###Plot 2 J CALL
 data = pd.read_parquet('data/j_call.parquet')
@@ -284,9 +287,9 @@ rf = pickle.load(open('j_call_model.sav', 'rb'))
 
 class_names = data['disease_stage'].unique().tolist()
 shap_values = shap.TreeExplainer(rf).shap_values(data[features])
-st.set_option('deprecation.showPyplotGlobalUse', False)
+# st.set_option('deprecation.showPyplotGlobalUse', False)
 fig, axes = plt.subplots()
-shap.summary_plot(shap_values, data[features], class_names=class_names, max_display=10)
+fig = shap.summary_plot(shap_values, data[features], class_names=class_names, max_display=10)
 st.pyplot(fig)
 components.html(
     """
@@ -395,7 +398,7 @@ rf = pickle.load(open('d_call_model.sav', 'rb'))
 features = ['trbd1-1', 'trbd1-1*01', 'trbd2-1', 'trbd2-1*01', 'trbd2-1*02']
 class_names = data['disease_stage'].unique().tolist()
 shap_values = shap.TreeExplainer(rf).shap_values(data[features])
-st.set_option('deprecation.showPyplotGlobalUse', False)
+# st.set_option('deprecation.showPyplotGlobalUse', False)
 fig, axes = plt.subplots(figsize=(5,5))
 fig = shap.summary_plot(shap_values, data[features], class_names=class_names, max_display=10)
 st.pyplot(fig)
